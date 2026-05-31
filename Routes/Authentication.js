@@ -4,6 +4,8 @@ const UserDetails = require('../Models/RegisterationModel');
 const { signupDetailValidation } = require('../Utiles/Validation');
 const bcrypt =require('bcrypt')
 const { hashingKey } = require('../config/Variableconfig')
+
+//Signup
 Authentication.post('/signup', async (req, res) => {
   try {
     signupDetailValidation(req.body);
@@ -15,16 +17,19 @@ Authentication.post('/signup', async (req, res) => {
 
     res.status(201).send('successfully registered');
   } catch (error) {
-    console.log(error);
     res.status(400).json({status:400,code:"VALIDATION_ERROR","message":error.message});
   }
 });
+//login
 Authentication.post('/login',async (req,res)=>{
       try {
     const { email, password } = req.body;
     const user = await UserDetails.findOne({ email: email });
     if (!user) {
       throw new Error("Invalid credentials");
+    }
+    if (user.isActive === false) {
+      throw new Error("User account is deactivated");
     }
     const isPasswordValid = await user.validatePassword(password);
 
@@ -46,6 +51,14 @@ Authentication.post('/login',async (req,res)=>{
     }
     
 })
-
+//logout
+Authentication.post("/logout",(req,res)=>{
+try{   
+   res.cookie("token",null, {expires:new Date(Date.now())}).send('logout successfully')
+}
+catch(error){
+  res.status(400).json({status:400,code:"VALIDATION_ERROR","message":error.message});
+}
+})
 
 module.exports = Authentication;

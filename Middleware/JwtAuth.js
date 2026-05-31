@@ -27,7 +27,7 @@ const JwtAuth = async (req, res, next) => {
     const decodeCookie = await jwt.verify(token, JWT_KEY);
     const { _id } = decodeCookie;
     const user = await UserDetails.findById({ _id })
-    if (user) {
+    if (user && user.isActive !== false) {
       req.user=user
       next();
     } else {

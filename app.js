@@ -2,9 +2,14 @@ const express = require('express');
 const { DatabaseConnection } = require('./config/DBconfig');
 const config = require('./config/Variableconfig');
 const RegisterRoute= require('./Routes/Authentication')
+const ProjectRoute=require('./Routes/Projects');
+const TaskRoute=require('./Routes/Task')
+const JwtAuth = require('./Middleware/JwtAuth');
+const permit=require('./Middleware/RBAC')
+const UserRoute=require('./Routes/Users')
 const app = express();
 app.use(express.json())
-app.use('/',RegisterRoute)
+app.use('/',RegisterRoute,ProjectRoute,UserRoute,TaskRoute)
 DatabaseConnection()
   .then(() => {
     console.log('DB connected');
@@ -12,7 +17,7 @@ DatabaseConnection()
       console.log(`server is running at port ${config.port}`);
     });
   })
-  .catch((err) => {
-    console.error('DB connection failed:', err.message);
+  .catch((error) => {
+    console.error('DB connection failed:', error.message);
     process.exit(1);
   });

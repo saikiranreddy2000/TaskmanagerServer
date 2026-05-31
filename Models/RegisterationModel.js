@@ -22,6 +22,10 @@ email:{
 password:{
     type:String,
     required:true
+},
+isActive:{
+    type:Boolean,
+    default:true
 }
 })
 UserDetails.methods.getJWT = async function () {
