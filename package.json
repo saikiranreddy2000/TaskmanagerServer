@@ -4,6 +4,7 @@
   "description": "it is backend server for A Role based authenticated Task manager",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

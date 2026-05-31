@@ -9,6 +9,9 @@ const permit=require('./Middleware/RBAC')
 const UserRoute=require('./Routes/Users')
 const app = express();
 app.use(express.json())
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 200, message: 'API is running' });
+})
 app.use('/',RegisterRoute,ProjectRoute,UserRoute,TaskRoute)
 DatabaseConnection()
   .then(() => {
