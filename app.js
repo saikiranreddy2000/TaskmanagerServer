@@ -1,16 +1,18 @@
-const express=require('express')
-const app=express();
-const {DatabaseConnection} =require('./config/DBconfig')
-
-DatabaseConnection().then(()=>{
-    try{
-        console.log('DB connected')
-        app.listen(3000,()=>{
-    console.log('server is runing at port 3000')
-}
-)
-    }
-    catch(err){
-        console.log(err)
-    }
-})
+const express = require('express');
+const { DatabaseConnection } = require('./config/DBconfig');
+const config = require('./config/Variableconfig');
+const RegisterRoute= require('./Routes/Authentication')
+const app = express();
+app.use(express.json())
+app.use('/',RegisterRoute)
+DatabaseConnection()
+  .then(() => {
+    console.log('DB connected');
+    app.listen(config.port, () => {
+      console.log(`server is running at port ${config.port}`);
+    });
+  })
+  .catch((err) => {
+    console.error('DB connection failed:', err.message);
+    process.exit(1);
+  });
