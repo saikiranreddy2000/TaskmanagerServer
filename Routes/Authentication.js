@@ -19,6 +19,33 @@ Authentication.post('/signup', async (req, res) => {
     res.status(400).json({status:400,code:"VALIDATION_ERROR","message":error.message});
   }
 });
+Authentication.post('/login',async (req,res)=>{
+      try {
+    const { email, password } = req.body;
+    const user = await UserDetails.findOne({ email: email });
+    if (!user) {
+      throw new Error("Invalid credentials");
+    }
+    const isPasswordValid = await user.validatePassword(password);
+
+    if (isPasswordValid) {
+      const token = await user.getJWT();
+      const userData = user.toObject();
+      delete userData.password;
+
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+      });
+      res.send(userData);
+    } else {
+      throw new Error("Invalid credentials");
+    }}
+    catch(error){
+    res.status(400).json({status:400,code:"VALIDATION_ERROR","message":error.message});
+ 
+    }
+    
+})
 
 
 module.exports = Authentication;
