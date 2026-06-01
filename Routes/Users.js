@@ -7,10 +7,8 @@ const UserDetails= require('../Models/RegisterationModel')
 //get all user details
 UserRoute.get('/users',JwtAuth,permit('ADMIN'),async(req,res)=>{
 try{const {page}=req.query
-console.log(page)
 const limitValue=10;
 const skipValue=(page-1)*limitValue||0;
-console.log(skipValue,'++')
 const allusers=await UserDetails.find().select('email name role isActive').skip(skipValue).limit(limitValue)
 res.json({ users: allusers })
 }

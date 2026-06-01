@@ -39,7 +39,6 @@ catch(error){
 ProjectRoute.get('/projectsDetails/:id',JwtAuth,permit('ADMIN','MANAGER'),async(req,res)=>{
 try{
 const {id}=req.params
-console.log(id,'id')
 const Projects=await Project.findOne({_id:id}).select('name createdBy description createdAt updatedAt').populate('createdBy',"name role")
 res.json({Projects})
 }
@@ -53,7 +52,6 @@ ProjectRoute.patch('/projectsDetails/deactivate/:id',JwtAuth,permit('ADMIN','MAN
 try{
 const {id}=req.params
 const {isactive}=req.body
-console.log(id,'id')
 const project=await Project.findOne({_id:id})
 if(project){
     project.isActive=isactive

@@ -27,8 +27,11 @@ TaskRoute.post('/task',JwtAuth,permit('ADMIN','MANAGER'),async (req, res) => {
     res.status(400).json({status:400,code:"VALIDATION_ERROR","message":error.message});
   }
 })
-TaskRoute.get('/task',JwtAuth,permit('ADMIN','MANAGER'),async (req, res) => {
+TaskRoute.get('/task?page=1',JwtAuth,permit('ADMIN','MANAGER'),async (req, res) => {
   try{
+    const {page}=req.query
+    const limitValue=10;
+    const skipValue=(page-1)*limitValue||0;
     const allTasks=await Task.find({})
       .populate('assigneeId', 'name')
       .populate('createdBy', 'name')
@@ -40,7 +43,7 @@ TaskRoute.get('/task',JwtAuth,permit('ADMIN','MANAGER'),async (req, res) => {
           select: 'name'
         }
       })
-      .populate('statusHistory.changedBy', 'name')
+      .populate('statusHistory.changedBy', 'name').skip(skipValue).limit(limitValue)
 
     res.json({ status: 200, data: allTasks })
   }
