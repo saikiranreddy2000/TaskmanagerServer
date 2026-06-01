@@ -444,6 +444,10 @@ GET /health
 
 9. Update assigned task status using `PATCH /member/tasks/:id/status`.
 
+## API Testing
+
+Import `Postman_collection.json` into Postman to test all endpoints.
+
 ## Project Structure
 
 ```text
